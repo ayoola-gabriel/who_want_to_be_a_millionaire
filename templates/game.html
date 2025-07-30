@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+    crossorigin="anonymous"></script>
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_io/favicon-32x32.png">
+
+  <style>
+    *{
+    padding:0px;
+    margin:0px;
+    box-sizing: border-box;
+    }
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    body{
+    background-color: black;
+    background-image: url("../static/img/bkg.jpg");
+    background-size: 100%;
+    }
+  </style>
+
+  <script src="/static/script/game.js"></script>
+  <title>Game</title>
+</head>
+
+<body class="">
+  <div class="container-fluid">
+    <div class="d-flex flex-column justify-content-between" style="height:100vh;">
+      <audio id="lets-play">
+        <source src="../static/audio/letsplay.mp3"/>
+      </audio>
+
+      <div class="d-flex flex-column align-items-center">
+        <div class="d-flex flex-nowrap justify-content-between">
+          <button id="control-mute" class="btn btn-transparent"><i
+              class="bi bi-volume-up fs-3 text-secondary"></i></button>
+          <button id="control-show" class="btn"><i class="bi bi-eye-slash fs-3 text-secondary"></i></button>
+        </div>
+
+        <div class="input-group" style="width: fit-content;">
+          <div id="scoreboard_a" class="my-auto rounded-start bg-light-subtle bg-gradient text-center p-1 px-3">
+            <p class="h6 m-0">Player A</p>
+            <p id="player_a" class="display-5 fw-medium m-0">0</p>
+          </div>
+
+          <div id="countdown" class="w-40" style="max-width: 300px;">
+            <p id="cnt" class="display-1 p-4 fw-bolder text-bg-dark text-center border border-white font-monospace">
+              00:00</p>
+          </div>
+
+          <div id="scoreboard_b" class="my-auto rounded-end bg-light-subtle text-white text-center p-1 px-3">
+            <p class="h6 m-0">Player B</p>
+            <p id="player_b" class="display-5 fw-medium m-0">2</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="d-flex flex-column mb-2">
+        <!-- Controls -->
+        <div id="controls-container" class="d-flex justify-content-evenly mb-3">
+          <button id="control-50-50" class="fs-5 btn btn-light rounded-pill">
+            <i class="bi bi-vr"></i>
+            <span class="d-none d-md-inline text-center">50/50</span></button>
+          <button id="control-final-answer" class="fs-5 border btn btn-light rounded-pill">
+            <i class="bi bi-check-all"></i>
+            <span class="d-none d-md-inline text-center">Final Answer</span>
+          </button>
+          <button id="control-next" class="fs-5 btn btn-light rounded-pill">
+            <span class="d-none d-md-inline text-center">Next</span>
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+        <div id="qs-container" class="invisible border border-3 mb-2 text-bg-dark rounded-pill">
+          <p id="question" class="h3 p-3 text-center"></p>
+        </div>
+
+        <div class="row mx-1 justify-content-between">
+          <button id="select-option-a"
+            class="option invisible border border-2 align-items-center text-bg-dark col-sm-6 col-md-6 border-light rounded-pill">
+            <div class="d-flex align-items-center h3 p-2">
+              <p class="ms-1 me-2">A.</p>
+              <p id="option_a" class="text-start"></p>
+            </div>
+          </button>
+
+          <button id="select-option-b"
+            class="option invisible border border-2 align-items-center text-bg-dark col-sm-6 col-md-6 border-light rounded-pill">
+            <div class="d-flex align-items-center h3 p-2">
+              <p class="ms-1 me-2">B.</p>
+              <p id="option_b" class="text-start"></p>
+            </div>
+          </button>
+        </div>
+
+
+        <div class="row mx-1 justify-content-between">
+          <button id="select-option-c"
+            class="option invisible border border-2 align-items-center col-sm-6 col-md-6 text-bg-dark border-light rounded-pill">
+            <div class="d-flex align-items-center h3 p-2">
+              <p class="ms-1 me-2">C.</p>
+              <p id="option_c" class="text-start"></p>
+            </div>
+          </button>
+
+
+          <button id="select-option-d"
+            class="option invisible border border-2 align-items-center col-sm-6 col-md-6 text-bg-dark border-light rounded-pill">
+            <div class="d-flex align-items-center h3 p-2">
+              <p class="ms-1 me-2">D.</p>
+              <p id="option_d" class="text-start"></p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Over Modal -->
+      <div id="gameOverModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content text-center"
+            style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); box-shadow: 0 0 30px #fcb69f88;">
+            <div class="modal-body">
+              <i class="bi bi-trophy-fill text-warning display-1 mb-3" style="text-shadow: 0 2px 8px #fff70099;"></i>
+              <h2 class="mb-3 text-danger fw-bold" style="text-shadow: 0 2px 8px #fff;">Game Over!</h2>
+              <p class="h4 mb-2 text-primary">Your Score:</p>
+              <p id="final-score" class="display-4 fw-bold mb-4" style="color: #e17055; text-shadow: 0 2px 8px #fff;">0
+              </p>
+              <div class="mb-3">
+                <span class="badge rounded-pill bg-danger fs-5 px-4 py-2">Try Again!</span>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-center" style="background: rgba(255,255,255,0.7);">
+              <button id="game-over" type="button" class="btn btn-gradient" onclick="window.location.href='/'"
+                style="background: linear-gradient(90deg,#fcb69f,#ffecd2); color: #222; border: none;">
+                <i class="bi bi-house-door-fill me-2"></i>Home
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- All Correct Modal -->
+      <div id="allCorrectModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content text-center"
+            style="background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%); box-shadow: 0 0 30px #43c6ac55;">
+            <div class="modal-body">
+              <i class="bi bi-emoji-laughing-fill text-warning display-1 mb-3"
+                style="text-shadow: 0 2px 8px #fff70099;"></i>
+              <h2 class="mb-3 text-success fw-bold" style="text-shadow: 0 2px 8px #fff;">Congratulations!</h2>
+              <p class="h4 mb-2 text-primary">You answered all questions correctly!</p>
+              <p class="h5 mb-4 text-info">Total Score:</p>
+              <p id="all-correct-score" class="display-4 fw-bold mb-4"
+                style="color: #00382d; text-shadow: 0 2px 8px #fff;">0</p>
+              <div class="mb-3">
+                <span class="badge rounded-pill bg-success fs-5 px-4 py-2">Perfect!</span>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-center" style="background: rgba(255,255,255,0.7);">
+              <button id="all-correct-home" type="button" class="btn btn-gradient"
+                onclick="window.location.href='/'"
+                style="background: linear-gradient(90deg,#43c6ac,#f8ffae); color: #222; border: none;">
+                <i class="bi bi-house-door-fill me-2"></i>Home
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Player Final Scores Modal -->
+      <div id="twoPlayerScoresModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content text-center" style="background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);">
+            <div class="modal-body">
+              <i class="bi bi-people-fill text-primary display-1 mb-3"></i>
+              <h2 class="mb-3 text-success fw-bold">Quiz Complete!</h2>
+              <p class="h4 mb-4 text-dark">Final Scores</p>
+              <div class="row justify-content-center mb-3">
+                <div class="col-6">
+                  <div class="card border-success mb-3 shadow" style="background: #e0ffe0;">
+                    <div class="card-body">
+                      <h5 class="card-title text-success"><i class="bi bi-person-fill"></i> Player A</h5>
+                      <p id="final-score-player-a" class="display-5 fw-bold text-success mb-0">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="card border-info mb-3 shadow" style="background: #e0f7ff;">
+                    <div class="card-body">
+                      <h5 class="card-title text-info"><i class="bi bi-person-fill"></i> Player B</h5>
+                      <p id="final-score-player-b" class="display-5 fw-bold text-info mb-0">0</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-center" style="background: rgba(255,255,255,0.7);">
+              <button type="button" class="btn btn-primary" onclick="window.location.href='index.html'">
+                <i class="bi bi-house-door-fill me-2"></i>Home
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <audio id="myAudio">
+      </audio>
+
+      <audio id="time-sound">
+      </audio>
+
+    </div>
+  </div>
+</body>
+
+</html>
